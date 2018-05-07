@@ -128,7 +128,7 @@ namespace JiraManager
                 {
                     for (var i = 0; i < datalist.Rows.Count; i++)
                     {
-                        this.tb_result.AppendText(datalist.Rows[i][0].ToString() +", "+
+                        this.tb_result.AppendText(datalist.Rows[i][0]?.ToString() +", "+
                             "\r\n");
                     }
                 }

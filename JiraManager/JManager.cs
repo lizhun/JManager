@@ -108,23 +108,27 @@ namespace JiraManager
                    "where t1.JiraNumber = '" + jiranumbers + "'", CommandType.Text);
                 if (dr.Read())
                 {
+                 var data=   dr.IsDBNull(0) || dr.IsDBNull(1) || dr.IsDBNull(2) || dr.IsDBNull(3) || dr.IsDBNull(4)||dr.IsDBNull(5);
                     jdata = new JiraPageInfo();
-                    jdata.Title = (string)dr["Title"];
-                    jdata.JiraNumber = (string)dr["JiraNumber"];
+                    jdata.Title = dr["Title"]?.ToString();
+                    jdata.JiraNumber = dr["JiraNumber"]?.ToString();
                     jdata.CreateTime = (DateTime)dr["CreateTime"];
                     jdata.UpdateTime = (DateTime)dr["UpdateTime"];
-                    var status = new StatusChangeItem();
-                    status.OldValue = (string)dr["OldValue"];
-                    status.NewValue = (string)dr["NewValue"];
-                    status.ActionDateTime = (DateTime)dr["ActionDateTime"];
-                    jdata.StatusLogs.Add(status);
-                    while (dr.Read())
+                    if (!dr.IsDBNull(4))
                     {
-                        status = new StatusChangeItem();
-                        status.OldValue = (string)dr["OldValue"];
-                        status.NewValue = (string)dr["NewValue"];
+                        var status = new StatusChangeItem();
+                        status.OldValue = dr["OldValue"]?.ToString();
+                        status.NewValue = dr["NewValue"]?.ToString();
                         status.ActionDateTime = (DateTime)dr["ActionDateTime"];
                         jdata.StatusLogs.Add(status);
+                        while (dr.Read())
+                        {
+                            status = new StatusChangeItem();
+                            status.OldValue = dr["OldValue"]?.ToString();
+                            status.NewValue = dr["NewValue"]?.ToString();
+                            status.ActionDateTime = (DateTime)dr["ActionDateTime"];
+                            jdata.StatusLogs.Add(status);
+                        }
                     }
                 }
 
